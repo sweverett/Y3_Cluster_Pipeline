@@ -1,0 +1,6 @@
+extra-files:
+    - ./libdevon.so
+    - ./libspencer.so
+pdfs:
+  - hmf
+  - gaussian
