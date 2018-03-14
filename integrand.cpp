@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <type_traits>
 #include <math.h>
 
 // PDF type definitions for all PDF pointers
@@ -32,9 +33,8 @@ extern "C" double test_func(double) {
 
 // The gamma_t and N integrands are very similar, so here's a parent class
 class Integrand {
-
 protected:
-  std::map<std::string, double(*)(double)> pdfs; // TODO: Make work for inhomogenous case!
+  Integrand(const std::string& config_file);
   double fcen;
   pdf_mor mor;
   pdf_lo_lc lo_lc;
@@ -44,7 +44,40 @@ protected:
   pdf_A_cen A_cen;
   pdf_A_mis A_mis;
   pdf_hmf hmf;
+
+  // the reason this takes an F& and sets that, instead of returning an F, is for the
+  // purpose of type deduction. We want to save users some typing!
+  // F should be a function pointer of some type.
+  template<typename F>
+  std::enable_if_t<std::is_function<F>::value>
+  load(F *target, const std::string& file, const std::string& func) {
+    auto handle = dlopen(file.c_str(), RTLD_LAZY | RTLD_GLOBAL);
+    if (!handle) {
+      std::cerr << "ERROR: could not load file " << file << std::endl;
+      std::cerr << dlerror() << std::endl;
+      exit(EXIT_FAILURE);
+    }
+    target = reinterpret_cast<F *>(dlsym(handle, func.c_str()));
+    if (!target) {
+      std::cerr << "ERROR: could not load function " << func << std::endl;
+      exit(EXIT_FAILURE);
+    }
+  }
 };
+
+Integrand::Integrand(const std::string& config_file) {
+  const auto config = YAML::LoadFile(config_file);
+  const auto filename = config["file"].as<std::string>();
+  fcen = config["fcen"].as<double>();
+  load(mor, filename, config["mor"].as<std::string>());
+  load(lo_lc, filename, config["lo_lc"].as<std::string>());
+  load(lc_lt, filename, config["lc_lt"].as<std::string>());
+  load(zo_zt, filename, config["zo_zt"].as<std::string>());
+  load(roffset, filename, config["roffset"].as<std::string>());
+  load(A_cen, filename, config["A_cen"].as<std::string>());
+  load(A_mis, filename, config["A_mis"].as<std::string>());
+  load(hmf, filename, config["hmf"].as<std::string>());
+}
 
 // This is still a scalar integrand; should vectorize in future
 class Gamma_T_Integrand: public Integrand {
