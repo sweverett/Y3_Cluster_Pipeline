@@ -1,22 +1,20 @@
 // model_lib.h
 
-using namespace std
-
 // Used to build MODEL_FUNCTIONS
-const static map<string, function<double(double)> > mor_funs;
-const static map<string, function<double(double)> > lo_lc_funs;
-const static map<string, function<double(double)> > lc_lt_funs;
-const static map<string, function<double(double)> > roffset_funs;
-const static map<string, function<double(double)> > A_cen_funs;
-const static map<string, function<double(double)> > A_mis_funs;
-const static map<string, function<double(double)> > zo_zt_funs;
-const static map<string, function<double(double)> > hmf_funs;
-const static map<string, function<double(double)> > T_cen_funs;
-const static map<string, function<double(double)> > T_mis_funs;
-const static map<string, function<double(double)> > del_sig_cen_funs;
-const static map<string, function<double(double)> > del_sig_mis_funs;
+const static std::map<string, std::function<double(double)> > mor_funs;
+const static std::map<string, std::function<double(double)> > lo_lc_funs;
+const static std::map<string, std::function<double(double)> > lc_lt_funs;
+const static std::map<string, std::function<double(double)> > roffset_funs;
+const static std::map<string, std::function<double(double)> > A_cen_funs;
+const static std::map<string, std::function<double(double)> > A_mis_funs;
+const static std::map<string, std::function<double(double)> > zo_zt_funs;
+const static std::map<string, std::function<double(double)> > hmf_funs;
+const static std::map<string, std::function<double(double)> > T_cen_funs;
+const static std::map<string, std::function<double(double)> > T_mis_funs;
+const static std::map<string, std::function<double(double)> > del_sig_cen_funs;
+const static std::map<string, std::function<double(double)> > del_sig_mis_funs;
 
-const static map< string, map<string, function<double(double)> > > MODEL_FUNCTIONS;
+const static std::map< string, std::map<string, std::function<double(double)> > > MODEL_FUNCTIONS;
 
 // P(MOR|...) functions (`pr_mor`)
 double test_mor(double lt, double m, double zt, void * config);
@@ -52,6 +50,6 @@ double test_T_mis(double r, double m, double R, void * config);
 double test_del_sig_cen(double r, double m, void * config);
 
 // Mis-centered delta-sigma functions (`del_sig_mis`)
-double test_del_sig_cen(double r, double m, double R, void * config);
+double test_del_sig_mis(double r, double m, double R, void * config);
 
 // etc ...
