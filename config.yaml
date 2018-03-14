@@ -1,6 +1,17 @@
 extra-files:
-    - ./libdevon.so
-    - ./libspencer.so
+  - ./lib1.so
+  - ./lib2.so
 pdfs:
-  - hmf
+#  # Example 1:
   - gaussian
+  - double_gaussian
+#  # Example 2:
+#  - gaussian
+#  - double_gaussian
+#  # Example 3:
+#  - gaussian
+#  - double_gaussian
+#  - test_func
+#  # Example 4:
+#  - gaussian
+#  - test_func
